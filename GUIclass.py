@@ -1,87 +1,130 @@
 ##raspberrypi all the class
-
+import smbus2 as smbus
 import RPi.GPIO as GPIO
 import time
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
-class LED:
+class I2C:
     def __init__(self):
-        GPIO.setup(14,GPIO.OUT)
-        GPIO.setup(15,GPIO.OUT)
-        self.leds = [14, 15]
-        self.leds[0] = GPIO.PWM(14,100)
-        self.leds[1] = GPIO.PWM(15,100)
+        self.bus = smbus.SMBus(1)
+        self.addr = 0
+        self.reset_val = 0
         return
 
+    def read_byte(self,write_val):
+        self.bus.write_byte(self.addr,write_val)
+        time.sleep(0.260)
+        data1 = self.bus.read_byte(self.addr)
+        data2 = self.bus.read_byte(self.addr)
+        return (data1<<8)|data2
 
-    def led_on(self,ldnum, duty = 100):
-        self.leds[ldnum].start(duty)
-
+    def reset(self):
+        self.bus.write_byte(self.addr,self.reset_val)
         return
 
-    def led_off(self,ldnum):
-        self.leds[ldnum].stop()
+#############  Input
 
-        return
-
-class PIEZO:
+class JoyStick:
     def __init__(self):
-        piezo_pin=13
-        GPIO.setup(13,GPIO.OUT)
-        self.scale = [261,294,329,349,392,440,493,523,587,659,698,783]
-        self.sound = GPIO.PWM(13,100)
-        self.flag = 0
+        self.pin = [5,6,16,20,21] #up down left right cen
+        self.stat = [0,0,0,0,0]
 
+        for i in self.pin:
+            GPIO.setup(i,GPIO.IN)
         return
 
-    def make_scale(self):
-        self.sound.start(100)
+    def read_stat(self):
+        for i in range(len(self.pin)):
+            self.cur_stat = GPIO.input(self.pin[i])
+            if self.cur_stat != self.stat[i]:
+                self.stat[i] = self.cur_stat
+                if self.cur_stat == 1:
+                    return i
 
-        for i in range(8):
-            self.sound.ChangeFrequency(self.scale[i])
-            time.sleep(0.5)
-        return
-
-    def piezo_off(self):
-        self.sound.ChangeDutyCycle(0)
-        self.sound.stop()
-        return
-
-class MOTOR:
+class PIR:
     def __init__(self):
-        GPIO.setup(4,GPIO.OUT)
-        GPIO.setup(25,GPIO.OUT)
-        GPIO.setup(12,GPIO.OUT)
-        self.motors=[4,25,12]   #RP,RN,EN
-
-        self.motors[2] = GPIO.PWM(self.GPIO_EN,100)
-        self.motors[2].start(0)
+        self.pir = 24
+        GPIO.setup(self.pir,GPIO.IN)
         return
 
+    def loop(self):
+        cnt = 0
+        for i in range (0,5):
+            if GPIO.input(self.pir) == True:
+                cnt+=1
+            time.sleep(1)
+            print(i)
+            i+=1
 
-    def cw(self,duty = 100):
-        GPIO.output(self.motors[0],True)
-        GPIO.output(self.motors[1],False)
-        GPIO.output(self.motors[2],True)
-        self.EN.ChangeDutyCycle(duty)
+        return cnt
+
+class Light(I2C):
+    def __init__(self):
+        super().__init__()
+        self.addr = 0x23
+        self.reset_val = 0x07
+        self.con_hr_mode = 0x10
+
+    def light_check(self):
+        val = self.read_byte(self.con_hr_mode)
+        lux = val/1.2
+        lux = round(lux,2)
+        return lux
+
+class UltraSonic:
+    def __init__(self):
+        self.trig = 0
+        self.echo = 1
+
+        GPIO.setup(self.trig,GPIO.OUT)
+        GPIO.setup(self.echo,GPIO.IN)
+
         return
 
-    def ccw(self,duty = 100):
-        GPIO.output(self.motors[0],False)
-        GPIO.output(self.motors[1],True)
-        GPIO.output(self.motors[2],True)
-        self.EN.ChangeDutyCycle(duty)
-        return
+    def sonic_check(self):
+        GPIO.output(self.trig,False)
+        time.sleep(0.5)
 
-    def motor_change_speed(p,duty):
-        p.ChangeDutyCycle(duty)
+        GPIO.output(self.trig,True)
+        time.sleep(0.00001)
+        GPIO.output(self.trig,False)
+        while GPIO.input(self.echo) == False:
+            pulse_start = time.time()
 
-    def motor_off(self):
-        GPIO.output.stop(self.motors[2],False)
+        while GPIO.input(self.echo) == True:
+            pulse_end = time.time()
 
-        return
+        pulse_duration = pulse_end - pulse_start
+        distance = pulse_duration*17000
+        distance = round(distance,2)
+        return distance
+
+class Temp_humi(I2C):
+    def __init__(self):
+        super().__init__()
+        self.addr = 0x40
+        self.reset_val = 0xfe
+        self.temp = 0xf3
+        self.humi = 0xf5
+
+    def check_temp(self):
+        val = self.read_byte(self.temp)
+        tmp = -46.85+175.72/65536*val
+        tmp= round(tmp,2)
+        return tmp
+
+    def check_humi(self):
+        val = self.read_byte(self.humi)
+        hmi = -6.0+125.0/65536*val
+        hmi = round(hmi,2)
+        return hmi
+
+
+
+############  Output
+
 
 class LCD:
 
@@ -197,64 +240,121 @@ class LCD:
             print ('direction must be 0 or 1')
         return
 
-class JoyStick:
+class LED:
     def __init__(self):
-        self.pin = [5,6,16,20,21] #up down left right cen
-        self.stat = [0,0,0,0,0]
-        for i in self.pin:
-            GPIO.setup(i,GPIO.IN)
-        return
+        GPIO.setup(14,GPIO.OUT)
+        GPIO.setup(15,GPIO.OUT)
+        self.leds = [14, 15]
+        self.stat_led = [0,0]
 
-    def read_stat(self):
-        for i in range(len(self.pin)):
-            self.cur_stat = GPIO.input(self.pin[i])
-            if self.cur_stat != self.stat[i]:
-                self.stat[i] = self.cur_stat
-                if self.cur_stat == 1:
-                    return i
-
-class PIR:
-    def __init__(self):
-        self.pir = 24
-        GPIO.setup(self.pir,GPIO.IN)
-        return
-
-    def loop(self):
-        cnt = 0
-        while True:
-            if GPIO.input(self.pir) == True:
-                print(cnt)
-                cnt+=1
-            time.sleep(0.1)
-        return cnt
-
-class UltraSonic:
-    def __init__(self):
-        self.trig = 0
-        self.echo = 1
-
-        GPIO.setup(self.trig,GPIO.OUT)
-        GPIO.setup(self.echo,GPIO.IN)
+        self.leds[0] = GPIO.PWM(14,100)
+        self.leds[1] = GPIO.PWM(15,100)
 
         return
 
-    def sonic_check(self):
-        GPIO.output(self.trig,False)
-        time.sleep(0.5)
 
-        GPIO.output(self.trig,True)
-        time.sleep(0.00001)
-        GPIO.output(self.trig,False)
-        while GPIO.input(self.echo) == False:
-            pulse_start = time.time()
+    def led_on(self,ldnum, duty = 100):
+        self.leds[ldnum].start(duty)
+        self.stat_led[ldnum]=1
+        return
 
-        while GPIO.input(self.echo) == True:
-            pulse_end = time.time()
+    def led_off(self,ldnum):
+        self.stat_led[ldnum]=0
+        self.leds[ldnum].stop()
 
-        pulse_duration = pulse_end - pulse_start
-        distance = pulse_duration*17000
-        distance = round(distance,2)
-        return distance
+        return
+
+class Piezo:
+    def __init__(self):
+        self.piezo_pin = 13
+        self.scal = [261,294,329,349,392,440,493,523,587,659,698,783]
+        GPIO.setup(self.piezo_pin,GPIO.OUT)
+        self.stat_piezo = 0
+        return
+
+    def make_sound(self,scal = 0,vol = 90):
+        self.frequency = GPIO.PWM(self.piezo_pin,self.scal[scal])
+        self.frequency.start(vol)
+        return
+
+    def sound_start(self):
+        self.stat_piezo = 1
+        self.sound.start(100)
+        for i in range(8):
+            self.sound.ChangeFrequency(self.scale[i])
+            time.sleep(0.5)
+        return
+
+    def change_scal(self,scal):
+        self.frequency.ChangeFrequency(self.scal[scal])
+        return
+
+    def sound_stop(self):
+        self.frequency.stop()
+        self.stat_piezo = 0
+        return
+
+class FND(I2C):
+    def __init__(self):
+        super().__init__()
+        self.addr = 0x20
+        self.config_port = 0x06
+        self.output_port = 0x02
+        self.data = (0xFC,0x60,0xDA,0xF2,0x66,0xB6,0x3E,0xE0,0xFE,0xF6,0xEE,0xF8,0x72,0xBC,0xF2,0xE2)
+        self.digit = (0x7F,0xBF,0xDF,0xEF,0xF7,0xFB)
+        self.out_disp = 0
+        self.bus.write_word_data(self.addr,self.config_port,0x0000) #?
+        return
+
+    def display_data(self,data,digit = 0):
+        out_disp = self.data[data]<<8|self.digit[digit]
+        self.bus.write_word_data(self.addr,self.output_port,out_disp)
+        return
+
+    def reset(self):
+        for i in range(6):
+            out_disp = 0x00<<8|self.digit[i]
+            self.bus.write_word_data(self.addr,self.output_port,out_disp)
+        return
+
+class MOTOR:
+    def __init__(self):
+
+        GPIO.setup(4,GPIO.OUT)
+        GPIO.setup(25,GPIO.OUT)
+        GPIO.setup(12,GPIO.OUT)
+        self.motors=[4,25,12]   #RP,RN,EN
+        self.stat_motor=0
+        self.motors[2] = GPIO.PWM(self.motors[2],100)
+        self.motors[2].start(0)
+        return
+
+
+    def cw(self,duty = 100):
+        GPIO.output(self.motors[0],True)
+        GPIO.output(self.motors[1],False)
+        GPIO.output(self.motors[2],True)
+        self.EN.ChangeDutyCycle(duty)
+        self.stat_motor=1
+        return
+
+    def ccw(self,duty = 100):
+        GPIO.output(self.motors[0],False)
+        GPIO.output(self.motors[1],True)
+        GPIO.output(self.motors[2],True)
+        self.EN.ChangeDutyCycle(duty)
+        self.stat_motor=2
+        return
+
+    def motor_change_speed(p,duty):
+        p.ChangeDutyCycle(duty)
+
+    def motor_off(self):
+        GPIO.output.stop(self.motors[2],False)
+        self.stat_motor=0
+
+        return
+
 
 
 #test
