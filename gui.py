@@ -9,13 +9,11 @@ class GUI:
 
         self.win = Tk()
         self.win.title('CLIENT')
-        self.win.geometry('700x500+200+100')
-
 
 
         self.text1 = ttk.Label(self.win, text=" INPUT ")
         self.text1.grid(column=0, row=0)
-        self.text1.config(font = ('Helvetica', 20, 'bold'))
+        self.text1.config(font = ('Helvetica',15, 'bold'))
 
 
         self.i1 = ttk.Label(self.win, text=" JOY stick ")
@@ -49,7 +47,7 @@ class GUI:
 
         self.text2 = ttk.Label(self.win, text=" OUTPUT ")
         self.text2.grid(column=0, row=7)
-        self.text2.config(font = ('Helvetica', 20, 'bold'))
+        self.text2.config(font = ('Helvetica', 15, 'bold'))
 
 
         self.ot1 = ttk.Label(self.win, text=" LCD ")
