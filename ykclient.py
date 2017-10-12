@@ -1,17 +1,17 @@
-import
+import Sensor_Stat as stat
 from socket import *
 from sys import exit
 import time
 #from data_file import SocketInfo
 
 
-Inputlist = [('ULTRA',ULTRA_value),('PIR',PIR_value),('TEMP',TEMP_value),('HUMI',TEMP_value),('ILLU',ILLU_value)]
-LCD = ('LCD', LCD_value)
-LED = ('LED',LED_value)
-PIEZO = ('PIEZO',PIEZO_value)
-FND = ('FND','ON',FND_value)
-MOTOR = ('MOTOR',MOTOR_value)
-JOY = ('JOY',JOY_value)
+#Inputlist = [('ULTRA',ULTRA_value),('PIR',PIR_value),('TEMP',TEMP_value),('HUMI',TEMP_value),('ILLU',ILLU_value)]
+#LCD = ('LCD', LCD_value)
+#LED = ('LED',LED_value)
+#PIEZO = ('PIEZO',PIEZO_value)
+#FND = ('FND','ON',FND_value)
+#MOTOR = ('MOTOR',MOTOR_value)
+#JOY = ('JOY',JOY_value)
 
 
 class SocketInfo :
@@ -28,38 +28,30 @@ class SocketInfo :
 
     def send(self):
         while True:
-            self.s.send(Inputlist[0][1])
-            self.s.send(Inputlist[1][1])
-            self.s.send(Inputlist[2][1])
-            self.s.send(Inputlist[3][1])
-            self.s.send(LCD[1])
-            self.s.send(LED[1])
-            self.s.send(PIEZZO[1])
-            self.s.send(MOTOR[1])
-            self.s.send(FND[1])
-            self.s.send(JOY[1])
-
-
+            self.s.send(str(stat.joy))
+            self.s.send()
+            self.s.send(str(stat.pir))
+            self.s.send()
+            self.s.send(str(stat.light))
+            self.s.send()
+            self.s.send(str(stat.ultra))
+            self.s.send()
+            #self.s.send(LCD[1])
+            self.s.send(str(stat.temp))
+            self.s.send()
+            self.s.send(str(stat.humi))
+            self.s.send()
+            self.s.send(stat.lcd)
+            self.s.send()
+            self.s.send(stat.led1)
+            self.s.send()
+            self.s.send(stat.led2)
+            self.s.send()
+            #self.s.send(FND[1])
+            self.s.send(stat.motor)
+            self.s.send()
             s.close()
 
-class Sensor_State:
-
-    def __init__(self):
-        #input
-        self.stat_joy
-        self.stat_pir
-        self.stat_led
-        self.stat_ultra
-        self.stat_temp
-        self.stat_humi
-        #output
-        self.stat_lcd
-        self.stat_led
-        self.stat_piezo
-        self.stat_fnd
-        self.stat_motor
-    def state_joy(self):
-        self.stat_
 #while True:
 #    try:
 #        commend = raw_input(">>")
