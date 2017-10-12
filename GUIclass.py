@@ -51,7 +51,7 @@ class PIR:
 
     def loop(self):
         cnt = 0
-        for i in range (0,5):
+        for i in range (0,3):
             if GPIO.input(self.pir) == True:
                 cnt+=1
             time.sleep(1)
@@ -269,29 +269,20 @@ class Piezo:
         self.piezo_pin = 13
         self.scal = [261,294,329,349,392,440,493,523,587,659,698,783]
         GPIO.setup(self.piezo_pin,GPIO.OUT)
-        self.stat_piezo = 0
-        return
-
-    def make_sound(self,scal = 0,vol = 90):
-        self.frequency = GPIO.PWM(self.piezo_pin,self.scal[scal])
-        self.frequency.start(vol)
+        self.stat_pie = 0
         return
 
     def sound_start(self):
-        self.stat_piezo = 1
+        self.stat_pie = 1
         self.sound.start(100)
         for i in range(8):
             self.sound.ChangeFrequency(self.scale[i])
             time.sleep(0.5)
         return
 
-    def change_scal(self,scal):
-        self.frequency.ChangeFrequency(self.scal[scal])
-        return
-
     def sound_stop(self):
         self.frequency.stop()
-        self.stat_piezo = 0
+        self.stat_pie = 0
         return
 
 class FND(I2C):
@@ -324,7 +315,7 @@ class MOTOR:
         GPIO.setup(25,GPIO.OUT)
         GPIO.setup(12,GPIO.OUT)
         self.motors=[4,25,12]   #RP,RN,EN
-        self.stat_motor=0
+        self.stat_mot=0
         self.motors[2] = GPIO.PWM(self.motors[2],100)
         self.motors[2].start(0)
         return
@@ -335,7 +326,7 @@ class MOTOR:
         GPIO.output(self.motors[1],False)
         GPIO.output(self.motors[2],True)
         self.EN.ChangeDutyCycle(duty)
-        self.stat_motor=1
+        self.stat_mot=1
         return
 
     def ccw(self,duty = 100):
@@ -343,7 +334,7 @@ class MOTOR:
         GPIO.output(self.motors[1],True)
         GPIO.output(self.motors[2],True)
         self.EN.ChangeDutyCycle(duty)
-        self.stat_motor=2
+        self.stat_mot=2
         return
 
     def motor_change_speed(p,duty):
@@ -351,7 +342,7 @@ class MOTOR:
 
     def motor_off(self):
         GPIO.output.stop(self.motors[2],False)
-        self.stat_motor=0
+        self.stat_mot=0
 
         return
 
