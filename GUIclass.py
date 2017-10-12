@@ -55,7 +55,6 @@ class PIR:
             if GPIO.input(self.pir) == True:
                 cnt+=1
             time.sleep(1)
-            print(i)
             i+=1
 
         return cnt
@@ -245,7 +244,6 @@ class LED:
         GPIO.setup(14,GPIO.OUT)
         GPIO.setup(15,GPIO.OUT)
         self.leds = [14, 15]
-        self.stat_led = [0,0]
 
         self.leds[0] = GPIO.PWM(14,100)
         self.leds[1] = GPIO.PWM(15,100)
@@ -255,11 +253,9 @@ class LED:
 
     def led_on(self,ldnum, duty = 100):
         self.leds[ldnum].start(duty)
-        self.stat_led[ldnum]=1
         return
 
     def led_off(self,ldnum):
-        self.stat_led[ldnum]=0
         self.leds[ldnum].stop()
 
         return
@@ -315,7 +311,6 @@ class MOTOR:
         GPIO.setup(25,GPIO.OUT)
         GPIO.setup(12,GPIO.OUT)
         self.motors=[4,25,12]   #RP,RN,EN
-        self.stat_mot=0
         self.motors[2] = GPIO.PWM(self.motors[2],100)
         self.motors[2].start(0)
         return
@@ -334,7 +329,6 @@ class MOTOR:
         GPIO.output(self.motors[1],False)
         GPIO.output(self.motors[2],True)
         self.EN.ChangeDutyCycle(duty)
-        self.stat_mot=1
         return
 
     def ccw(self,duty = 100):
@@ -342,7 +336,6 @@ class MOTOR:
         GPIO.output(self.motors[1],True)
         GPIO.output(self.motors[2],True)
         self.EN.ChangeDutyCycle(duty)
-        self.stat_mot=2
         return
 
     def motor_change_speed(p,duty):
@@ -350,7 +343,6 @@ class MOTOR:
 
     def motor_off(self):
         GPIO.output.stop(self.motors[2],False)
-        self.stat_mot=0
 
         return
 
