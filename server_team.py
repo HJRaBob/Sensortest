@@ -9,7 +9,7 @@ class Socket:
     def __init__(self, data):
 
         self.svrsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.svrsock.bind(('70.12.114.181', 8001))
+        self.svrsock.bind(('localhost', 8001))
         self.svrsock.listen(0)
 
 
@@ -27,9 +27,9 @@ class Socket:
         conn.close()
 
 
-    def split(data):
+    def split_word(data):
         words = data.split()
-            print(words)
+        print(words)
 
 
 
@@ -39,7 +39,7 @@ class Socket:
 
 
 
-            
+"""            
 #connect = pymysql.connect(db='data_base')
 #curs = connect.cursor()
 #data = (('JOG_ON', 1, 'JOG'), ('JOG_OFF', 0, 'JOG'),
@@ -50,7 +50,7 @@ class Socket:
 #        ('TEMP_ON', 1, 'TEMP'), ('TEMP_OFF', 0, 'TEMP')
 #        ('PIEZO_ON', 1, 'PIEZO'), ('PIEZO_OFF', 0, 'PIEZO')
 #        ('SONIC_ON', 1, 'SONIC'), ('SONIC_OFF', 0, 'SONIC'))
-#sql = """insert into data() values (%s, %s)"""
+#sql = ""insert into data() values (%s, %s)""
 #curs.execute(sql, data)
 #Socket(data)
 #curs.execute("insert into values ('table_name, :state);" (table_name, state))
@@ -68,3 +68,4 @@ class Socket:
 #        LCD
 #        PIEZO
 #        MOTOR
+"""
