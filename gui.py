@@ -9,11 +9,13 @@ class GUI:
 
         self.win = Tk()
         self.win.title('CLIENT')
+        self.win.geometry('700x500+200+100')
+
 
 
         self.text1 = ttk.Label(self.win, text=" INPUT ")
         self.text1.grid(column=0, row=0)
-        #self.text1.config(font = ('bold')
+        self.text1.config(font = ('Helvetica', 20, 'bold'))
 
 
         self.i1 = ttk.Label(self.win, text=" JOY stick ")
@@ -29,25 +31,25 @@ class GUI:
 
 
         self.in1 = ttk.Label(self.win, text="                ")
-        self.in1.grid(column=1, row=1)
+        self.in1.grid(column=2, row=1)
         self.in2 = ttk.Label(self.win, text="                ")
-        self.in2.grid(column=1, row=2)
+        self.in2.grid(column=2, row=2)
         self.in3 = ttk.Label(self.win, text="                ")
-        self.in3.grid(column=1, row=3)
+        self.in3.grid(column=2, row=3)
         self.in4 = ttk.Label(self.win, text="                ")
-        self.in4.grid(column=1, row=4)
+        self.in4.grid(column=2, row=4)
         self.in5 = ttk.Label(self.win, text="                ")
-        self.in5.grid(column=1, row=5)
+        self.in5.grid(column=2, row=5)
 
 
         self.emp1 = ttk.Label(self.win, text="-----------------------------")
         self.emp1.grid(column=0, row=6)
         self.emp2 = ttk.Label(self.win, text="-----------------------------")
-        self.emp2.grid(column=1, row=6)
+        self.emp2.grid(column=2, row=6)
 
         self.text2 = ttk.Label(self.win, text=" OUTPUT ")
         self.text2.grid(column=0, row=7)
-        #self.text2.config(font = ( 'bold')
+        self.text2.config(font = ('Helvetica', 20, 'bold'))
 
 
         self.ot1 = ttk.Label(self.win, text=" LCD ")
@@ -62,15 +64,15 @@ class GUI:
         self.ot5.grid(column=0, row=12)
 
         self.out1 = ttk.Label(self.win, text="                ")
-        self.out1.grid(column=1, row=8)
+        self.out1.grid(column=2, row=8)
         self.out2 = ttk.Label(self.win, text="                ")
-        self.out2.grid(column=1, row=9)
+        self.out2.grid(column=2, row=9)
         self.out3 = ttk.Label(self.win, text="                ")
-        self.out3.grid(column=1, row=10)
+        self.out3.grid(column=2, row=10)
         self.out4 = ttk.Label(self.win, text="                ")
-        self.out4.grid(column=1, row=11)
+        self.out4.grid(column=2, row=11)
         self.out5 = ttk.Label(self.win, text="                ")
-        self.out5.grid(column=1, row=12)
+        self.out5.grid(column=2, row=12)
 
         self.checkcheck()
 
