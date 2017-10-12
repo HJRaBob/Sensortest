@@ -1,169 +1,181 @@
 from tkinter import *
 from tkinter import ttk
-import GUIclass as mylib
+import Sensor_Stat as s_s
 import time
 
 class GUI:
 
     def __init__(self):
-        win = Tk()
-        win.title('2 GUI')
 
-        #Input
-        self.joy=mylib.JoyStick()
-        self.pir=mylib.PIR()
-        #self.light=mylib.Light()
-        self.us=mylib.UltraSonic()
-        self.temp=mylib.Temp_humi()
+        self.win = Tk()
+        self.win.title('CLIENT')
 
-        #Output
-        self.lcd=mylib.LCD()
-        self.led=mylib.LED()
-        self.piezo=mylib.Piezo()
-        #self.fnd=mylib.FND()
-        #self.motor=mylib.MOTOR()
-
-        self.text1 = ttk.Label(win, text=" INPUT ")
-        self.text1.grid(column=0, row=0)
-        #self.text1.config(font = (18, 'bold'))
+        self.text1 = ttk.Label(self.win, text=" INPUT ")
+        self.text1.grid(column=0, row=0, columnspan = 4)
+        self.text1.config(font = ('Helvetica',12, 'bold'))
 
 
-        self.i1 = ttk.Label(win, text=" JOY stick ")
+        self.i1 = ttk.Label(self.win, text=" JOY stick ")
         self.i1.grid(column=0, row=1)
-        self.i2 = ttk.Label(win, text=" PIR ")
+        self.i2 = ttk.Label(self.win, text=" PIR ")
         self.i2.grid(column=0, row=2)
-        self.i3 = ttk.Label(win, text=" 조도 ")
+        self.i3 = ttk.Label(self.win, text=" Light ")
         self.i3.grid(column=0, row=3)
-        self.i4 = ttk.Label(win, text=" UltraSonic ")
+        self.i4 = ttk.Label(self.win, text=" UltraSonic ")
         self.i4.grid(column=0, row=4)
-        self.i5 = ttk.Label(win, text=" Temp/Humi ")
+        self.i5 = ttk.Label(self.win, text=" TEMP ")
         self.i5.grid(column=0, row=5)
-        self.i6 = ttk.Label(win, text=" Light ")
+        self.i6 = ttk.Label(self.win, text=" HUMI ")
         self.i6.grid(column=0, row=6)
 
-        self.in1 = ttk.Label(win, text="                ")
-        self.in1.grid(column=1, row=1)
-        self.in2 = ttk.Label(win, text="                ")
-        self.in2.grid(column=1, row=2)
-        self.in3 = ttk.Label(win, text="                ")
-        self.in3.grid(column=1, row=3)
-        self.in4 = ttk.Label(win, text="                ")
-        self.in4.grid(column=1, row=4)
-        self.in5 = ttk.Label(win, text="                ")
-        self.in5.grid(column=1, row=5)
-        self.in6 = ttk.Label(win, text="                ")
-        self.in6.grid(column=1, row=6)
 
 
-        self.emp1 = ttk.Label(win, text="------------------------")
-        self.emp1.grid(column=0, row=6)
-        self.emp2 = ttk.Label(win, text="------------------------")
-        self.emp2.grid(column=1, row=6)
-
-        self.text2 = ttk.Label(win, text=" OUTPUT ")
-        self.text2.grid(column=0, row=7)
-        #self.text2.config(font = (18, 'bold'))
 
 
-        self.ot1 = ttk.Label(win, text=" LCD ")
-        self.ot1.grid(column=0, row=8)
-        self.ot2 = ttk.Label(win, text=" LED ")
-        self.ot2.grid(column=0, row=9)
-        self.ot3 = ttk.Label(win, text=" PIEZO ")
-        self.ot3.grid(column=0, row=10)
-        self.ot4 = ttk.Label(win, text=" FND ")
-        self.ot4.grid(column=0, row=11)
-        self.ot5 = ttk.Label(win, text=" MOTOR ")
-        self.ot5.grid(column=0, row=12)
+        self.in1 = ttk.Label(self.win, text="                ")
+        self.in1.grid(column=2, row=1)
+        self.in2 = ttk.Label(self.win, text="                ")
+        self.in2.grid(column=2, row=2)
+        self.in3 = ttk.Label(self.win, text="                ")
+        self.in3.grid(column=2, row=3)
+        self.in4 = ttk.Label(self.win, text="                ")
+        self.in4.grid(column=2, row=4)
+        self.in5 = ttk.Label(self.win, text="                ")
+        self.in5.grid(column=2, row=5)
+        self.in6 = ttk.Label(self.win, text="                ")
+        self.in6.grid(column=2, row=6)
 
-        self.out1 = ttk.Label(win, text="                ")
-        self.out1.grid(column=1, row=8)
-        self.out2 = ttk.Label(win, text="                ")
-        self.out2.grid(column=1, row=9)
-        self.out3 = ttk.Label(win, text="                ")
-        self.out3.grid(column=1, row=10)
-        self.out4 = ttk.Label(win, text="                ")
-        self.out4.grid(column=1, row=11)
-        self.out5 = ttk.Label(win, text="                ")
-        self.out5.grid(column=1, row=12)
+
+        self.emp1 = ttk.Label(self.win, text="--------------------------------")
+        self.emp1.grid(column=0, row=7)
+        self.emp2 = ttk.Label(self.win, text="--------------------------------")
+        self.emp2.grid(column=2, row=7)
+
+        self.text2 = ttk.Label(self.win, text=" OUTPUT ")
+        self.text2.grid(column=0, row=8, columnspan = 4)
+        self.text2.config(font = ('Helvetica', 12, 'bold'))
+
+
+        self.ot1 = ttk.Label(self.win, text=" LCD ")
+        self.ot1.grid(column=0, row=9)
+        self.ot2 = ttk.Label(self.win, text=" LED ")
+        self.ot2.grid(column=0, row=10)
+        self.ot3 = ttk.Label(self.win, text=" PIEZO ")
+        self.ot3.grid(column=0, row=11)
+        self.ot4 = ttk.Label(self.win, text=" FND ")
+        self.ot4.grid(column=0, row=12)
+        self.ot5 = ttk.Label(self.win, text=" MOTOR ")
+        self.ot5.grid(column=0, row=13)
+
+        self.out1 = ttk.Label(self.win, text="                ")
+        self.out1.grid(column=2, row=9)
+        self.out2 = ttk.Label(self.win, text="                ")
+        self.out2.grid(column=2, row=10)
+        self.out3 = ttk.Label(self.win, text="                ")
+        self.out3.grid(column=2, row=11)
+        self.out4 = ttk.Label(self.win, text="                ")
+        self.out4.grid(column=2, row=12)
+        self.out5 = ttk.Label(self.win, text="                ")
+        self.out5.grid(column=2, row=13)
+
+        self.emp3 = ttk.Label(self.win, text="                ")
+        self.emp3.grid(column=2, row=14)
 
         self.checkcheck()
-        win.mainloop()
+
 
         return
 
 
     def checkcheck(self):
+
         print("checkcheck")
+
+        self.ss=s_s.Libraury()
         self.check_stat_joy()
+        self.check_stat_pir()
+        self.check_stat_light()
         self.check_stat_led()
         self.check_stat_ultrasonic()
         self.check_stat_temp()
-        #self.check_stat_motor()
-        time.sleep(1)
+        self.check_stat_piezo()
+        self.check_stat_motor()
+
+        self.win.update()
+
 
 
     def check_stat_joy(self):
         print("joy")
-        if self.joy.read_stat() == 0:
+        if self.ss.stat_joy == 0:
             self.in1.config(text=" UP ")
-        elif self.joy.read_stat() == 1:
+        elif self.ss.stat_joy == 1:
             self.in1.config(text=" DOWN ")
-        elif self.joy.read_stat() == 2:
+        elif self.ss.stat_joy == 2:
             self.in1.config(text=" LEFT ")
-        elif self.joy.read_stat() == 3:
+        elif self.ss.stat_joy == 3:
             self.in1.config(text=" RIGHT ")
-        elif self.joy.read_stat() == 4:
+        elif self.ss.stat_joy == 4:
             self.in1.config(text=" CENTER ")
         else :
             self.in1.config(text=" NOT WORKING ")
 
+    def check_stat_pir(self):
+        print("pir")
+        self.in2.config(text= self.ss.stat_pir)
 
+    def check_stat_light(self):
+        print("light")
+        self.in3.config(text= self.ss.stat_light)
 
     def check_stat_led(self):
         print("led")
-        if self.led.stat_led[0] == 1 and self.led.stat_led[1] == 1 :
+        if self.ss.stat_led1 == 1 and self.ss.stat_led2 == 1 :
             self.out2.config(text=" ALL LED ON")
 
-        elif self.led.stat_led[0] == 1 and self.led.stat_led[1] == 0 :
+        elif self.ss.stat_led1 == 1 and self.ss.stat_led2 == 0 :
             self.out2.config(text=" FIRST LED ON")
 
-        elif self.led.stat_led[0] == 0 and self.led.stat_led[1] == 1 :
+        elif self.ss.stat_led1 == 0 and self.ss.stat_led2 == 1 :
             self.out2.config(text=" SECOND LED ON")
 
-        elif self.led.stat_led[0] == 0 and self.led.stat_led[1] == 0 :
+        elif self.ss.stat_led1 == 0 and self.ss.stat_led2 == 0 :
             self.out2.config(text=" ALL LED OFF")
 
     def check_stat_ultrasonic(self):
         print("ultrasonic")
-        self.in4.config(text = self.us.sonic_check())
+        self.in4.config(text = self.ss.stat_ultrasonic)
 
     def check_stat_temp(self):
         print("Temp_humi")
-        self.in5.config(text = str(self.temp.check_temp()) + " / " +  str(self.temp.check_humi()) )
+        self.in5.config(text = self.ss.stat_temp)
+        self.in6.config(text = self.ss.stat_humi)
 
+    def check_stat_piezo(self):
+        if self.ss.stat_piezo == 1:
+            self.out3.config(text=" ON ")
 
-
-    # def check_stat_piezo(self):
-    #     #if piezo의 상태
-    #     #piezzo 가 켜지면 self.out3.config(text=" PIEZO ON")
-    #     #piezo 가 꺼지면 self.out3.config(text=" PIEZO OFF")
-
+        else :
+            self.out3.config(text=" OFF ")
 
     # def check_stat_fnd(self):
     #     #if fnd의 상태
-    #     #piezzo 가 켜지면 self.out4.config(text=" FND ON")
-    #     #led 가 꺼지면 self.out4.config(text=" FND OFF")
+    #     #fnd 가 켜지면 self.out4.config(text=" FND ON")
+    #     #fnd 가 꺼지면 self.out4.config(text=" FND OFF")
     #
 
-    # def check_stat_motor(self):
-    #     if self.motor.stat_motor == 0:
-    #         self.out5.config(text=" STOP ")
-    #     elif self.motor.stat_motor == 1:
-    #         self.out5.config(text="CW ")
-    #     elif self.motor.stat_motor == 2:
-    #         self.out5.config(text=" CCW ")
+
+    def check_stat_motor(self):
+        if self.ss.stat_motor == 0:
+            self.out5.config(text=" STOP ")
+        elif self.ss.stat_motor == 1:
+            self.out5.config(text="CW ")
+        elif self.ss.stat_motor == 2:
+            self.out5.config(text=" CCW ")
+
+
 
 if __name__ == "__main__":
-
     gui = GUI()
+    while True:
+        gui.checkcheck()
